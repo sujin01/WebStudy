@@ -1,0 +1,12 @@
+body {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    margin: 0px;
+    background: rgb(232, 198, 150);
+}
+
+h1{
+    font-family: Pacifico, sans-serif;
+    color: rgb(78, 37, 2);
+}
