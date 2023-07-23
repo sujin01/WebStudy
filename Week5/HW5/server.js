@@ -1,7 +1,16 @@
 const http = require('http');
 const fs = require('fs');
 
+const express = require('express');
+const cors = require('cors');
+const app = express();
+app.use(cors());
+
+
 function whenIncomingRequest(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
+    res.setHeader('Access-Control-Allow-Methods', 'PATCH, GET, POST, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     if(req.url === '/api/todolist'&& req.method === 'GET'){
         if(!fs.existsSync("todolist.txt")){
             fs.writeFileSync("todolist.txt", "");
@@ -10,7 +19,7 @@ function whenIncomingRequest(req, res) {
         res.end(data);
         return;
     }
-
+    
     if(req.url === '/api/todolist'&& req.method === 'POST'){
         let body = '';
         req.on('data', chunk => {
@@ -35,7 +44,7 @@ function whenIncomingRequest(req, res) {
         });
         return;
     }
-
+    
     if(req.url === '/api/todolist'&& req.method === 'DELETE'){
         let body = '';
         req.on('data', chunk => {
@@ -54,7 +63,7 @@ function whenIncomingRequest(req, res) {
         });
         return;
     }
-
+    
     if(req.url === '/api/todolist' && req.method === 'PATCH'){
         let body = '';
         req.on('data', chunk => {
@@ -99,4 +108,4 @@ function whenIncomingRequest(req, res) {
 
 const server = http.createServer(whenIncomingRequest);
 
-server.listen(8080);
+server.listen(3000);

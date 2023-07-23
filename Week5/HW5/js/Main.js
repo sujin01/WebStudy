@@ -2,25 +2,30 @@
 let todolist = [];
 
 // 화면에 할 일 목록을 표시하는 함수
-function renderTodoList() {
+function updateTodoList() {
     const list = document.getElementById("todo-list");
-    list.innerHTML = ""; // 기존 목록 초기화
+    list.innerHTML = ""; 
 
     todolist.forEach((item, index) => {
-        const li = document.createElement("div");
+        const todoItem = document.createElement("div");
+        todoItem.classList.add("todo-item");
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = item.status === 'o';
-        checkbox.addEventListener("change", () => {
+
+        checkbox.addEventListener("change", (event) => {
+            const listItem = event.target.parentElement;
+            const text = listItem.textContent;
             const status = checkbox.checked ? 'o' : 'x';
             // TODO: 서버에 PATCH 요청 보내기
-            fetch('/api/todolist', {
+            fetch('http://localhost:3000/api/todolist', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'text/plain'
                 },
-                body: status + '|' + text
+                body: status + '|' + text,
+                mode: 'cors'
             }).then(res => {
                 if (res.status === 200) {
                     todolist = todolist.map(item => {
@@ -29,7 +34,7 @@ function renderTodoList() {
                         }
                         return item;
                     });
-                    renderTodoList();
+                    updateTodoList();
                 }
                 else if (res.status === 400) {
                     alert('invalid status');
@@ -42,29 +47,37 @@ function renderTodoList() {
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", () => {
+        deleteButton.setAttribute("id", "delete-button");
+
+        deleteButton.addEventListener("click", (event) => {
+            const listItem = event.target.parentElement;
+            const text = listItem.textContent;
             // TODO: 서버에 DELETE 요청 보내기
-            fetch('/api/todolist', {
+            console.log('here');
+            fetch('http://localhost:3000/api/todolist', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'text/plain'
                 },
-                body: text
-            }).then(res => {
-                if (res.status === 200) {
-                    todolist = todolist.filter(item => item.text !== text);
-                    renderTodoList();
-                }
-                else if (res.status === 400) {
-                    alert('invalid status');
-                }
-            });
+                body: text,
+                mode: 'cors' 
+            })
+                .then(res => {
+                    console.log('here');
+                    if (res.status === 200) {
+                        todolist = todolist.filter(item => item.text !== text);
+                        updateTodoList();
+                    }
+                    else if (res.status === 400) {
+                        alert('invalid status');
+                    }
+                });
         });
 
-        li.appendChild(checkbox);
-        li.appendChild(label);
-        li.appendChild(deleteButton);
-        list.appendChild(li);
+        todoItem.appendChild(checkbox);
+        todoItem.appendChild(label);
+        todoItem.appendChild(deleteButton);
+        list.appendChild(todoItem);
     });
 }
 
@@ -76,16 +89,17 @@ function addTodo() {
         alert("빈 내용은 추가하지 못합니다.");
         return;
     }
-    fetch('/api/todolist', {
+    fetch('http://localhost:3000/api/todolist', {
         method: 'POST',
         headers: {
             'Content-Type': 'text/plain'
         },
         body: text
-    }).then(res => {
+    })
+        .then(res => {
             if (res.status === 201) {
                 todolist = [...todolist, { status: 'x', text }];
-                renderTodoList()
+                updateTodoList()
             }
             else if (res.status === 409) {
                 alert('already exists');
@@ -96,18 +110,24 @@ function addTodo() {
 
 // 초기화 작업
 function init() {
-    fetch('/api/todolist')
-        .then((res) => res.json())
+    fetch('http://localhost:3000/api/todolist', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+    })
+        .then((res) => res.text())
         .then((data) => {
+            
             if (data.trim() === '') {
-                todolist = []; // 빈 배열로 초기화
+                todolist = []; 
             } else {
                 todolist = data.trim().split('\n').map((item) => {
                     const [status, text] = item.split('|');
                     return { status, text };
                 });
             }
-            renderTodoList(); // 화면에 할 일 목록 렌더링
+            updateTodoList(); 
         })
         .catch((error) => {
             console.error('Error fetching data:', error);
