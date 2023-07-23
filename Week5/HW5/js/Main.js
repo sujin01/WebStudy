@@ -15,8 +15,10 @@ function updateTodoList() {
         checkbox.checked = item.status === 'o';
 
         checkbox.addEventListener("change", (event) => {
-            const listItem = event.target.parentElement;
-            const text = listItem.textContent;
+            const listItem=event.target.parentElement;
+            const newtext = listItem.textContent;
+            const text = newtext.replace('Delete', '').trim();
+            console.log(text);
             const status = checkbox.checked ? 'o' : 'x';
             // TODO: 서버에 PATCH 요청 보내기
             fetch('http://localhost:3000/api/todolist', {
@@ -50,8 +52,10 @@ function updateTodoList() {
         deleteButton.setAttribute("id", "delete-button");
 
         deleteButton.addEventListener("click", (event) => {
-            const listItem = event.target.parentElement;
-            const text = listItem.textContent;
+            const listItem=event.target.parentElement;
+            const newtext = listItem.textContent;
+            const text = newtext.replace('Delete', '').trim();
+            console.log(text);
             // TODO: 서버에 DELETE 요청 보내기
             console.log('here');
             fetch('http://localhost:3000/api/todolist', {

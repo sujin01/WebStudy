@@ -8,6 +8,7 @@ app.use(cors());
 
 
 function whenIncomingRequest(req, res) {
+
     res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
     res.setHeader('Access-Control-Allow-Methods', 'PATCH, GET, POST, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -92,9 +93,9 @@ function whenIncomingRequest(req, res) {
         return;
     }
 
-    //다른 모든 요청은 각 요청에 맞는 파일을 읽어서 전송한다.
+        //다른 모든 요청은 각 요청에 맞는 파일을 읽어서 전송한다.
     const filename = req.url === '/' ? 'index.html' : req.url.substring(1);
-    fs.readFile("build/"+filename, (err, data) => {
+    fs.readFile(filename, (err, data) => {
         if(err){
             res.statusCode = 404;
             res.end('not found');
@@ -109,3 +110,5 @@ function whenIncomingRequest(req, res) {
 const server = http.createServer(whenIncomingRequest);
 
 server.listen(3000);
+
+
