@@ -8,7 +8,7 @@ app.use(cors());
 app.use(bodyParser.text({type:"*/*"}));
 
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: '192.168.219.104',
   user: 'root',
   password: '7326',
   database: 'todolist'
