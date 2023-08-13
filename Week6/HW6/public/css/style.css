@@ -1,0 +1,48 @@
+body {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    margin: 0px;
+    background: rgb(232, 198, 150);
+}
+
+h1{
+    font-family: Pacifico, sans-serif;
+    text-align: center;
+    font-size: 70px;
+    color: rgb(78, 37, 2);
+}
+
+input {
+    border: none;
+    font-size: 30px;
+    border-radius: 10px;
+    font-family: 'Nanum Pen Script', sans-serif;
+    background-color: rgb(219, 128, 68); 
+    color: rgb(0, 0, 0); 
+}
+
+.position{
+    position: relative; 
+    top: 20px; 
+}
+.todo-item {
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    background-color: rgba(221, 162, 122, 0.682);
+    justify-content: space-between;
+    font-family: 'Nanum Pen Script', sans-serif;
+    font-size: 24px;
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+#delete-button {
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(243, 68, 37); 
+}
